@@ -6,6 +6,7 @@ import requests
 import json
 from datetime import datetime
 import os
+import pytz
 
 client_secret = os.environ['client_secret']
 client_id = os.environ['client_id']
@@ -16,6 +17,7 @@ postUri = os.environ['postUri']
 data_context = os.environ['data_context']
 update_frequency = 5
 debug_mode = os.environ.get("debug_mode", "false").lower() == "true"
+lithuania_tz = pytz.timezone("Europe/Vilnius")
 
 def get_realtime_bus_data():
     response = requests.get(vehicle_positions_url)
@@ -48,7 +50,7 @@ def push_row():
     global access_token
 
     row_to_add = {
-        "timestamp": datetime.now().timestamp() * 1000,
+        "timestamp": datetime.now(lithuania_tz).timestamp() * 1000,
         "data": get_realtime_bus_data(),
         "context": data_context
     }
